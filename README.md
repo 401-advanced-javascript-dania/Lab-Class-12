@@ -6,8 +6,8 @@
 
 ### Links and Resources
 
-- [submission PR]()
-- [ci/cd]()
+- [submission PR](https://github.com/401-advanced-javascript-dania/Lab-Class-12/pull/1)
+- [ci/cd](https://github.com/401-advanced-javascript-dania/Lab-Class-12/actions)
 
 
 ### Setup
