@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Landing page</title>
+</head>
+<body>
+    <h1>My Login Page:</h1>
+    <a id="oauth" href="#">Login To My App</a>
+</body>
+<script>
+    require('dotenv').config();
+    let URL ='http://github.com/login/oauth/authorize';
+    let options={
+        client_id:process.env.CLIENT_ID,
+        redirect_uri:'http://localhost:3000/oauth',
+        scope:'read:user',
+        state:'401appconsent'
+    }
+    let QueryString = Object.keys(options).map((key)=>{
+return `${key}=`+encodeURIComponent(options[key])
+    }).join('$');
+    let authURL=`${URL}?${QueryString}`;
+    let link = document.getElementById('oauth');
+    link.setAttribute('href',authURL)
+</script>
+</html>
