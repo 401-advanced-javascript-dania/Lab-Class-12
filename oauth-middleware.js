@@ -1,18 +1,29 @@
 'use strict';
-require('dotenv').config();
+//oauth  to get back user information 1. give me the access_token from gihub 2. give me the user info
+//to take the env enviroment
+// require('dotenv').config();
+// to handle the remote request from github (API) (request engin)
 const superagent = require('superagent');
-const users = require('./users.js');
-const tokenServerUrl = 'http://github.com/login/oauth/access_token';
+const users = require('./index.js');
+// the url to get a token for access 
+const tokenUrl = 'http://github.com/login/oauth/access_token';
+// the api that we will be accessing 
 const remoteAPI = 'http://api.github.com/user';
-const CLIENT_ID=process.env.CLIENT_ID;
-const CLIENT_SECRET=process.env.CLIENT_SECRET;
-const API_SERVER=process.env.API_SERVER;
+const CLIENT_ID='cee7d9c157365d5ea927';
+const CLIENT_SECRET='3e000384db3cb375703901435424d41b65fa8c3c';
+//our api server (path for get request ) redirect from github 
+const API_SERVER='http://localhost:3000/oauth';
 module.exports=async function authorize(req,res,next){
     try{
         let code = req.query.code;
-        let remoteToken = await exchangeCodeForToken(code);
-        let remoteUser = await getRemoteUserInfo(remoteToken);
-        let [user,token] = await getUser(remoteUser);
+        console.log('code',code)
+        // give github access_token and give me user Info
+        let token = await codeAgainstToken(code);
+        // take the user Info
+        let userLargeInfo = await getUserInfo(token);
+        // type the user Info and token 
+        console.log('userLargeInfo',userLargeInfo)
+        let [user,token] = await typeUserInfo(userLargeInfo);
         req.user=user;
         req.token=token;
         next();
@@ -20,30 +31,35 @@ module.exports=async function authorize(req,res,next){
         next(err);
     }
 }
-async function exchangeCodeForToken(code){
-    let tokenResponse = await superagent.post(tokenServerUrl).send({
+async function codeAgainstToken(code){
+    // we are return response object and attached it to req.body
+    let tokenRes = await superagent.post(tokenUrl).send({
         code:code,
         client_id:CLIENT_ID,
         client_secret:CLIENT_SECRET,
         redirect_uri:API_SERVER,
         grant_type:'authorization_code'
     })
-    let access_token = tokenResponse.body.access_token;
+    //tokenRes.body is like req.body
+    let access_token = tokenRes.body.access_token;
     return access_token;
 }
-async function getRemoteUserInfo(token){
-    let userResponse = await superagent.get(remoteAPI)
+// once we login with github i give github my access_token and github give me user info 
+async function getUserInfo(token){
+    let userRes = await superagent.get(remoteAPI)
+    //set headers
     .set('user-agent','express-app')
     .set('Authorization',`token${token}`)
-let user = userResponse.body;
-return user;
+let userInfo = userRes.body;
+return userInfo;
 }
-async function getUser(remoteUser){
-    let userRecord = {
-        username:remoteUser.login,
+// it type the user information , the user that own that github 
+async function typeUserInfo(user){
+    let userData= {
+        username:user.login,
         password:'anything'
     }
-    let user = await users.save(userRecord);
-    let token = users.generateToken(user);
+    let user = await users.userInfoSave(userData);
+    let token = users.tokenGeneration(user);
     return [user,token]
 }
