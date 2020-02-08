@@ -1,9 +1,7 @@
-
-
 'use stirct';
 const express = require('express');
 const basicOfAuth=require('./basic-auth-middleware.js');
-const users = require('./index.js');
+const users = require('./users.js');
 const oauthMiddleware = require('./oauth-middleware.js')
 const app =express();
 //global middleware 

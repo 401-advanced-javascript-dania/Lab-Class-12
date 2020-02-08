@@ -5,7 +5,7 @@
 // require('dotenv').config();
 // to handle the remote request from github (API) (request engin)
 const superagent = require('superagent');
-const users = require('./index.js');
+const users = require('./users.js/index.js');
 // the url to get a token for access 
 const tokenUrl = 'http://github.com/login/oauth/access_token';
 // the api that we will be accessing 

@@ -1,5 +1,3 @@
-
-  
 'use strict';
 //bcrybt and jwt is two layer of athentication
 //to hash the password then compare it 
