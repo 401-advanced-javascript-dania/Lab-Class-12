@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document</title>
+</head>
+<body>
+    <h1>Login Page</h1>
+    <a id="id" href="#">Login To The App</a>
+</body>
+<script>
+    // require('dotenv').config();
+    // base url to login to github 
+    let BASEURL ='http://github.com/login/oauth/authorize';
+// queryObject is gonna show in the url 
+    let queryObject={
+        client_id:'cee7d9c157365d5ea927',
+        redirect_uri:'http://localhost:3000/oauth',
+        scope:'read:user',
+        state:'any-thing'
+    }
+    let Query = Object.keys(queryObject).map((val)=>{
+return `${val}=`+encodeURIComponent(queryObject[val])
+    }).join('&');
+    // it will return array of keys
+    // we are here bulid a long url 
+    let theAuthURL=`${BASEURL}?${Query}`;
+    let url = document.getElementById('id');
+    url.setAttribute('href',theAuthURL)
+    console.log('url',url)
+</script>
+</html>
