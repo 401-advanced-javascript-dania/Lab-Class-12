@@ -2,12 +2,12 @@
 'use stirct';
 const express = require('express');
 const basicOfAuth = require('./basic-auth-middleware.js');
-const oauthMiddleware = require('./oauth-middleware.js')
+const oauthMiddleware = require('./oauth-middleware.js');
 const Users = require('./users.js');
 const app = express();
 //global middleware
 app.use(express.json());
-app.use(express.static('./public'))
+app.use(express.static('./public'));
 // signup that it will be to the first time the user sign into the app (creation peise)
 app.post('/signup',(req,res)=>{
   //req.body have a basic information (user information)
@@ -35,8 +35,8 @@ app.get('/users',basicOfAuth,(req,res)=>{
 });
 
 app.get('/oauth',oauthMiddleware,(req,res,next)=>{
-    res.status(200).json(req.token)
-})
+  res.status(200).json(req.token);
+});
 module.exports = {
   server:app,
   start: port =>{
