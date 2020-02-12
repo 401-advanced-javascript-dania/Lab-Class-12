@@ -5,15 +5,15 @@
 // require('dotenv').config();
 // to handle the remote request from github (API) (request engin)
 const superagent = require('superagent');
-const users = require('./users.js');
+const Users = require('./users.js');
 // the url to get a token for access 
 const tokenUrl = 'https://github.com/login/oauth/access_token';
 // the api that we will be accessing 
 const remoteAPI = 'https://api.github.com/user';
-const CLIENT_ID='cee7d9c157365d5ea927';
-const CLIENT_SECRET='3e000384db3cb375703901435424d41b65fa8c3c';
+const CLIENT_ID=process.env.CLIENT_ID;
+const CLIENT_SECRET=process.env.CLIENT_SECRET;
 //our api server (path for get request ) redirect from github 
-const API_SERVER='http://localhost:3000/oauth';
+const API_SERVER=process.env.API_SERVER;
 module.exports=async function authorize(req,res,next){
     try{
         let code = req.query.code;
@@ -63,7 +63,8 @@ async function typeUserInfo(userName){
         username:userName.login,
         password:'anything'
     }
-    let user = await users.userInfoSave(userData);
-    let token = users.tokenGeneration(user);
+    let newUser = new Users(userData);
+    let user =await newUser.save();
+    let token = await newUser.tokenGenerationForSignup(user);
     return [user,token]
 }
